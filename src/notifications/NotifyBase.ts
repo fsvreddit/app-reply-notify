@@ -3,13 +3,13 @@ import { Comment, SettingsFormField, SettingsValues, TriggerContext } from "@dev
 export abstract class NotifyBase {
     abstract notificationType: string;
     abstract enabledByDefault: boolean;
-    abstract actionSettings: SettingsFormField[] | undefined;
+    abstract actionSettings: SettingsFormField[];
 
     protected context: TriggerContext;
     protected settings: SettingsValues;
 
     public getSettings (): SettingsFormField {
-        const settings: SettingsFormField[] = this.actionSettings ? [...this.actionSettings] : [];
+        const settings: SettingsFormField[] = [...this.actionSettings];
         settings.unshift({
             type: "boolean",
             name: `enable${this.notificationType}Notifications`,

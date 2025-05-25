@@ -3,7 +3,7 @@ import { NotifyBase } from "./NotifyBase.js";
 import json2md from "json2md";
 
 export class NotifyByModmail extends NotifyBase {
-    notificationType = "Modmail";
+    override notificationType = "Modmail";
     override enabledByDefault = false;
 
     public actionSettings = [];

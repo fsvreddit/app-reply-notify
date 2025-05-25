@@ -2,7 +2,7 @@ import { Comment } from "@devvit/public-api";
 import { NotifyBase } from "./NotifyBase.js";
 
 export class NotifyByReport extends NotifyBase {
-    notificationType = "Report";
+    override notificationType = "Report";
     override enabledByDefault = true;
 
     override actionSettings = [];

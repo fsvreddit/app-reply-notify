@@ -27,12 +27,11 @@ function isMonitoredUser (username: string, subredditName: string, settings: Set
 
 export async function handleCommentCreate (event: CommentCreate, context: TriggerContext) {
     if (!event.comment || !event.author?.name) {
-        console.warn("CommentCreate: Missing comment or author information.");
+        console.error("CommentCreate: Missing comment or author information.");
         return;
     }
 
     if (event.comment.spam) {
-        console.log(`CommentCreate: Ignoring filtered or removed comment ${event.comment.id}`);
         return;
     }
 

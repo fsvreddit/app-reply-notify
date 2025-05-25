@@ -29,7 +29,7 @@ const baseSettings: SettingsFormField[] = [
             {
                 type: "string",
                 name: AppSetting.NotifyForSpecifiedUsers,
-                label: "Notify for these specified Users (comma-separated usernames, not case-sensitive)",
+                label: "Notify for these specified Users (comma-separated, not case-sensitive)",
                 helpText: "Omit the leading /u/ when specifying usernames. For example, to notify for replies to /u/trending-tattler and /u/vip-bot, enter 'trending-tattler, vip-bot'.",
             },
         ],
@@ -39,8 +39,8 @@ const baseSettings: SettingsFormField[] = [
 export function getAppSettings (): SettingsFormField[] {
     const settings = [...baseSettings];
     for (const NotificationHandler of ALL_NOTIFICATION_TYPES) {
-        const action = new NotificationHandler({}, {} as unknown as TriggerContext);
-        settings.push(action.getSettings());
+        const notificationHandler = new NotificationHandler({}, {} as unknown as TriggerContext);
+        settings.push(notificationHandler.getSettings());
     }
 
     return settings;
