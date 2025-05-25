@@ -8,17 +8,25 @@ There are a number of different ways you can choose to be notified. You can choo
 
 Note: Notifications will only be sent if the user replies within 28 days of the comment being replied to, and notifications will not be sent for comments that were filtered to the modqueue or immediately removed by Automoderator or Reddit's filters.
 
+Notifications will only be sent for replies to comments that were made after the app was installed and configured to look for that user.
+
 ### Report
 
-This creates a report on the user comment
+This creates a report on the user comment:
+
+![image](https://github.com/fsvreddit/app-reply-notify/blob/main/doc_images/report.png?raw=true)
 
 ### Modmail
 
-This sends a modmail to the subreddit with a link to the comment and its contents.
+This sends a modmail to the subreddit with a link to the comment and its contents:
+
+![image](https://github.com/fsvreddit/app-reply-notify/blob/main/doc_images/modmail.png?raw=true)
 
 ### Discord
 
-This sends a notification to a configured Discord webhook
+This sends a notification to a configured Discord webhook:
+
+![image](https://github.com/fsvreddit/app-reply-notify/blob/main/doc_images/discord.png?raw=true)
 
 ## Change Log
 

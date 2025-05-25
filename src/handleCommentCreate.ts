@@ -3,7 +3,7 @@ import { CommentCreate } from "@devvit/protos";
 import { AppSetting } from "./settings.js";
 import { isLinkId } from "@devvit/shared-types/tid.js";
 import { DateTime } from "luxon";
-import { ALL_NOTIFICATION_TYPES } from "./actions/allNotificationTypes.js";
+import { ALL_NOTIFICATION_TYPES } from "./notifications/allNotificationTypes.js";
 
 function isMonitoredUser (username: string, subredditName: string, settings: SettingsValues): boolean {
     if (settings[AppSetting.NotifyForAutomod] && username === "AutoModerator") {
@@ -14,8 +14,9 @@ function isMonitoredUser (username: string, subredditName: string, settings: Set
         return true;
     }
 
-    if (settings[AppSetting.NotifyForSpecifiedUsers]) {
-        const specifiedUsers = (settings[AppSetting.NotifyForSpecifiedUsers] as string).split(",").map(user => user.trim().toLowerCase());
+    const specifiedUsersVal = settings[AppSetting.NotifyForSpecifiedUsers] as string | undefined;
+    if (specifiedUsersVal) {
+        const specifiedUsers = specifiedUsersVal.split(",").map(user => user.trim().toLowerCase());
         if (specifiedUsers.includes(username.toLowerCase())) {
             return true;
         }
@@ -40,6 +41,7 @@ export async function handleCommentCreate (event: CommentCreate, context: Trigge
 
     if (isMonitoredUser(event.author.name, subredditName, settings)) {
         await context.redis.set(`comment:${event.comment.id}`, event.author.name, { expiration: DateTime.now().plus({ days: 28 }).toJSDate() });
+        console.log(`CommentCreate: Monitored user ${event.author.name} commented in subreddit ${subredditName}.`);
         return;
     }
 

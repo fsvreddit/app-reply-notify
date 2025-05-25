@@ -1,11 +1,13 @@
 import { SettingsFormField, TriggerContext } from "@devvit/public-api";
-import { ALL_NOTIFICATION_TYPES } from "./actions/allNotificationTypes.js";
+import { ALL_NOTIFICATION_TYPES } from "./notifications/allNotificationTypes.js";
 
 export enum AppSetting {
     NotifyForModTeamAccount = "notifyForModTeamAccount",
     NotifyForAutomod = "notifyForAutomod",
     NotifyForSpecifiedUsers = "notifyForSpecifiedUsers",
 }
+
+export const SETTINGS_UPDATE_JOB = "settingsUpdateJob";
 
 const baseSettings: SettingsFormField[] = [
     {
