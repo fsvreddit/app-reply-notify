@@ -28,6 +28,8 @@ This sends a notification to a configured Discord webhook:
 
 ![image](https://github.com/fsvreddit/app-reply-notify/blob/main/doc_images/discord.png?raw=true)
 
+The title of the embed is a link to the comment being reported.
+
 ## Change Log
 
 ### v1.0.0

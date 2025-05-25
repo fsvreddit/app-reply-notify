@@ -1,6 +1,5 @@
 import { Comment, SettingsFormField } from "@devvit/public-api";
 import { NotifyBase } from "./NotifyBase.js";
-import { EmbedBuilder } from "discord.js";
 
 export class NotifyByDiscord extends NotifyBase {
     override notificationType = "Discord";
@@ -33,14 +32,15 @@ export class NotifyByDiscord extends NotifyBase {
             return;
         }
 
-        const embed = new EmbedBuilder();
-        embed.setTitle(`Reply notification from /u/${comment.authorName} to a comment by /u/${parentUsername}`);
-        embed.setDescription(comment.body);
-        embed.setURL(`https://www.reddit.com${comment.permalink}`);
-
         const params = {
             username: "App Reply Notifier",
-            embeds: [embed.toJSON()],
+            embeds: [
+                {
+                    title: `/u/${comment.authorName} replied to a comment by /u/${parentUsername}`,
+                    description: comment.body,
+                    url: `https://www.reddit.com${comment.permalink}`,
+                },
+            ],
         };
 
         await fetch(
