@@ -1,14 +1,8 @@
 import { Devvit } from "@devvit/public-api";
 import { getAppSettings } from "./settings.js";
 import { handleCommentCreate } from "./handleCommentCreate.js";
-import { handleAppInstall } from "./installActions.js";
 
 Devvit.addSettings(getAppSettings());
-
-Devvit.addTrigger({
-    event: "AppInstall",
-    onEvent: handleAppInstall,
-});
 
 Devvit.addTrigger({
     event: "CommentCreate",

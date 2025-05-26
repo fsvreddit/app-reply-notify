@@ -5,6 +5,7 @@ import json2md from "json2md";
 export class NotifyByModmail extends NotifyBase {
     override notificationType = "Modmail";
     override enabledByDefault = false;
+    override helpText = "Sends a modmail message to the subreddit moderators when a comment is made in response to a monitored user.";
 
     public actionSettings = [];
 

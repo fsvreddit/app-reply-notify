@@ -4,6 +4,7 @@ import { NotifyBase } from "./NotifyBase.js";
 export class NotifyByDiscord extends NotifyBase {
     override notificationType = "Discord";
     override enabledByDefault = false;
+    override helpText = "Sends a Discord notification when a comment is made in response to a monitored user.";
 
     private webhookSetting = "discordWebhookUrl";
     override actionSettings: SettingsFormField[] = [

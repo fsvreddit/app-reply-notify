@@ -5,6 +5,16 @@ import { isLinkId } from "@devvit/shared-types/tid.js";
 import { DateTime } from "luxon";
 import { ALL_NOTIFICATION_TYPES } from "./notifications/allNotificationTypes.js";
 
+async function getCommentAuthor (commentId: string, context: TriggerContext): Promise<string> {
+    const commentAuthor = await context.redis.get(`comment:${commentId}`);
+    if (commentAuthor) {
+        return commentAuthor;
+    }
+
+    const comment = await context.reddit.getCommentById(commentId);
+    return comment.authorName;
+}
+
 function isMonitoredUser (username: string, subredditName: string, settings: SettingsValues): boolean {
     if (settings[AppSetting.NotifyForAutomod] && username === "AutoModerator") {
         return true;
@@ -31,16 +41,9 @@ export async function handleCommentCreate (event: CommentCreate, context: Trigge
         return;
     }
 
+    await context.redis.set(`comment:${event.comment.id}`, event.author.name, { expiration: DateTime.now().plus({ days: 1 }).toJSDate() });
+
     if (event.comment.spam) {
-        return;
-    }
-
-    const settings = await context.settings.getAll();
-    const subredditName = context.subredditName ?? await context.reddit.getCurrentSubredditName();
-
-    if (isMonitoredUser(event.author.name, subredditName, settings)) {
-        await context.redis.set(`comment:${event.comment.id}`, event.author.name, { expiration: DateTime.now().plus({ days: 28 }).toJSDate() });
-        console.log(`CommentCreate: Monitored user ${event.author.name} commented in subreddit ${subredditName}.`);
         return;
     }
 
@@ -48,9 +51,11 @@ export async function handleCommentCreate (event: CommentCreate, context: Trigge
         return;
     }
 
-    const parentCommentNotifiableAuthor = await context.redis.get(`comment:${event.comment.parentId}`);
-    // Why check the monitored author again? They may no longer be configured to be notified.
-    if (!parentCommentNotifiableAuthor || !isMonitoredUser(parentCommentNotifiableAuthor, subredditName, settings)) {
+    const settings = await context.settings.getAll();
+    const subredditName = context.subredditName ?? await context.reddit.getCurrentSubredditName();
+
+    const parentAuthor = await getCommentAuthor(event.comment.parentId, context);
+    if (!isMonitoredUser(parentAuthor, subredditName, settings)) {
         return;
     }
 
@@ -62,7 +67,11 @@ export async function handleCommentCreate (event: CommentCreate, context: Trigge
             continue;
         }
 
-        await notificationHandler.execute(comment, parentCommentNotifiableAuthor);
-        console.log(`CommentCreate: Notified by ${notificationHandler.notificationType} for comment ${event.comment.id}`);
+        try {
+            await notificationHandler.execute(comment, parentAuthor);
+            console.log(`CommentCreate: Notified by ${notificationHandler.notificationType} for comment ${event.comment.id}`);
+        } catch (error) {
+            console.error(`CommentCreate: Error notifying by ${notificationHandler.notificationType} for comment ${event.comment.id}`, error);
+        }
     }
 }
