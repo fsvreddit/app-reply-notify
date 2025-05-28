@@ -35,6 +35,20 @@ function isMonitoredUser (username: string, subredditName: string, settings: Set
     return false;
 }
 
+async function isModerator (username: string, context: TriggerContext): Promise<boolean> {
+    const subredditName = context.subredditName ?? await context.reddit.getCurrentSubredditName();
+    if (username === `${subredditName}-ModTeam` || username === "AutoModerator") {
+        return true;
+    }
+
+    const moderators = await context.reddit.getModerators({
+        subredditName,
+        username,
+    }).all();
+
+    return moderators.length > 0;
+}
+
 export async function handleCommentCreate (event: CommentCreate, context: TriggerContext) {
     if (!event.comment || !event.author?.name) {
         console.error("CommentCreate: Missing comment or author information.");
@@ -56,6 +70,12 @@ export async function handleCommentCreate (event: CommentCreate, context: Trigge
 
     const parentAuthor = await getCommentAuthor(event.comment.parentId, context);
     if (!isMonitoredUser(parentAuthor, subredditName, settings)) {
+        return;
+    }
+
+    const ignoreMods = settings[AppSetting.IgnoreCommentsFromModerators] as boolean | undefined ?? true;
+    if (ignoreMods && await isModerator(event.author.name, context)) {
+        console.log(`CommentCreate: Ignoring comment from moderator ${event.author.name} in response to ${parentAuthor}`);
         return;
     }
 
