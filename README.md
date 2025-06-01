@@ -38,6 +38,10 @@ This could be useful if you just want to notify the user that their message won'
 
 ## Change Log
 
+### v1.1.0
+
+Add option (enabled by default) to ignore comments made by moderators
+
 ### v1.0.2
 
 Initial release

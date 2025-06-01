@@ -5,6 +5,7 @@ export enum AppSetting {
     NotifyForModTeamAccount = "notifyForModTeamAccount",
     NotifyForAutomod = "notifyForAutomod",
     NotifyForSpecifiedUsers = "notifyForSpecifiedUsers",
+    IgnoreCommentsFromModerators = "ignoreCommentsFromModerators",
 }
 
 export const SETTINGS_UPDATE_JOB = "settingsUpdateJob";
@@ -31,6 +32,13 @@ const baseSettings: SettingsFormField[] = [
                 name: AppSetting.NotifyForSpecifiedUsers,
                 label: "Notify for these specified Users (comma-separated, not case-sensitive)",
                 helpText: "Omit the leading /u/ when specifying usernames. For example, to notify for replies to /u/trending-tattler and /u/vip-bot, enter 'trending-tattler, vip-bot'.",
+            },
+            {
+                type: "boolean",
+                name: AppSetting.IgnoreCommentsFromModerators,
+                label: "Ignore comments from moderators",
+                helpText: "If enabled, comments from moderators in reply to the above accounts will not trigger notifications.",
+                defaultValue: true,
             },
         ],
     },
