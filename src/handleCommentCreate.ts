@@ -1,9 +1,10 @@
 import { SettingsValues, TriggerContext } from "@devvit/public-api";
 import { CommentCreate } from "@devvit/protos";
 import { AppSetting } from "./settings.js";
-import { isLinkId } from "@devvit/shared-types/tid.js";
+import { isLinkId } from "@devvit/public-api/types/tid.js";
 import { DateTime } from "luxon";
 import { ALL_NOTIFICATION_TYPES } from "./notifications/allNotificationTypes.js";
+import { hasTriggerBeenHandled } from "@fsvreddit/fsv-devvit-helpers";
 
 async function getCommentAuthor (commentId: string, context: TriggerContext): Promise<string> {
     const commentAuthor = await context.redis.get(`comment:${commentId}`);
@@ -62,6 +63,11 @@ export async function handleCommentCreate (event: CommentCreate, context: Trigge
     }
 
     if (isLinkId(event.comment.parentId)) {
+        return;
+    }
+
+    if (await hasTriggerBeenHandled(context.redis, `commentCreate:${event.comment.id}`)) {
+        console.log(`CommentCreate: Trigger already handled for comment ${event.comment.id}. Skipping.`);
         return;
     }
 

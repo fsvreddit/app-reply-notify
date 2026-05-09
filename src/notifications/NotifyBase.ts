@@ -1,5 +1,4 @@
 import { Comment, SettingsFormField, SettingsValues, TriggerContext } from "@devvit/public-api";
-import { replaceAll } from "../utility.js";
 
 export abstract class NotifyBase {
     abstract notificationType: string;
@@ -14,7 +13,7 @@ export abstract class NotifyBase {
         const settings: SettingsFormField[] = [...this.actionSettings];
         settings.unshift({
             type: "boolean",
-            name: `enable${replaceAll(this.notificationType, " ", "")}Notifications`,
+            name: `enable${this.notificationType.replaceAll(" ", "")}Notifications`,
             label: `Enable ${this.notificationType} notifications`,
             defaultValue: this.enabledByDefault,
         });
@@ -28,7 +27,7 @@ export abstract class NotifyBase {
     }
 
     public actionEnabled (): boolean {
-        return this.settings[`enable${replaceAll(this.notificationType, " ", "")}Notifications`] as boolean | undefined ?? this.enabledByDefault;
+        return this.settings[`enable${this.notificationType.replaceAll(" ", "")}Notifications`] as boolean | undefined ?? this.enabledByDefault;
     }
 
     public constructor (settings: SettingsValues, context: TriggerContext) {

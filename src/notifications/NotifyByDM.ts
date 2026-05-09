@@ -1,6 +1,5 @@
 import { Comment, SettingsFormField } from "@devvit/public-api";
 import { NotifyBase } from "./NotifyBase.js";
-import { replaceAll } from "../utility.js";
 
 export class NotifyByDM extends NotifyBase {
     override notificationType = "Direct Message";
@@ -36,9 +35,9 @@ export class NotifyByDM extends NotifyBase {
             messageSubject = "Comment reply notification";
         }
 
-        message = replaceAll(message, "{{authorname}}", comment.authorName);
-        message = replaceAll(message, "{{permalink}}", comment.permalink);
-        message = replaceAll(message, "{{parentusername}}", parentUsername);
+        message = message.replaceAll("{{authorname}}", comment.authorName);
+        message = message.replaceAll("{{permalink}}", comment.permalink);
+        message = message.replaceAll("{{parentusername}}", parentUsername);
 
         await this.context.reddit.sendPrivateMessage({
             to: comment.authorName,
