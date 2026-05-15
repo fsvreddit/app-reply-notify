@@ -4,7 +4,7 @@ import { AppSetting } from "./settings.js";
 import { isLinkId } from "@devvit/public-api/types/tid.js";
 import { DateTime } from "luxon";
 import { ALL_NOTIFICATION_TYPES } from "./notifications/allNotificationTypes.js";
-import { hasTriggerBeenHandled } from "@fsvreddit/fsv-devvit-helpers";
+import { getTrueUsername, hasTriggerBeenHandled } from "@fsvreddit/fsv-devvit-helpers";
 
 async function getCommentAuthor (commentId: string, context: TriggerContext): Promise<string> {
     const commentAuthor = await context.redis.get(`comment:${commentId}`);
@@ -56,7 +56,9 @@ export async function handleCommentCreate (event: CommentCreate, context: Trigge
         return;
     }
 
-    await context.redis.set(`comment:${event.comment.id}`, event.author.name, { expiration: DateTime.now().plus({ days: 1 }).toJSDate() });
+    const authorName = await getTrueUsername(context.reddit, event.author.name, event.comment.id);
+
+    await context.redis.set(`comment:${event.comment.id}`, authorName, { expiration: DateTime.now().plus({ days: 1 }).toJSDate() });
 
     if (event.comment.spam) {
         return;
@@ -80,8 +82,8 @@ export async function handleCommentCreate (event: CommentCreate, context: Trigge
     }
 
     const ignoreMods = settings[AppSetting.IgnoreCommentsFromModerators] as boolean | undefined ?? true;
-    if (ignoreMods && await isModerator(event.author.name, context)) {
-        console.log(`CommentCreate: Ignoring comment from moderator ${event.author.name} in response to ${parentAuthor}`);
+    if (ignoreMods && await isModerator(authorName, context)) {
+        console.log(`CommentCreate: Ignoring comment from moderator ${authorName} in response to ${parentAuthor}`);
         return;
     }
 

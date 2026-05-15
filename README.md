@@ -38,6 +38,10 @@ This could be useful if you just want to notify the user that their message won'
 
 ## Change Log
 
+### v1.1.2
+
+* Fix issue which might stop app handling app-created comments that get filtered to the queue
+
 ### v1.1.1
 
 * Mitigate against duplicate actions if the Developer Platform is having issues
