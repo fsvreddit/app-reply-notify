@@ -5,22 +5,28 @@
   "license": "BSD-3-Clause",
   "type": "module",
   "scripts": {
-    "test": "npm run test:unit",
-    "test:unit": "vitest --run"
+    "build": "vite build",
+    "test": "vitest run --config vitest.config.ts",
+    "lint": "eslint \"src/**/*.{ts,tsx}\"",
+    "type-check": "tsc --build && tsc --build --clean"
   },
   "dependencies": {
-    "@devvit/protos": "0.12.23",
-    "@devvit/public-api": "0.12.23",
-    "@fsvreddit/fsv-devvit-helpers": "github:fsvreddit/fsv-devvit-helpers",
-    "json2md": "^2.0.3",
-    "luxon": "^3.6.1"
+    "@devvit/start": "0.15.2",
+    "@devvit/web": "0.15.2",
+    "@fsvreddit/fsv-devvit-web-helpers": "^0.2.6",
+    "@hono/node-server": "^2.1.4",
+    "date-fns": "^4.4.0",
+    "hono": "^4.13.13",
+    "json2md": "^2.0.3"
   },
   "devDependencies": {
-    "@fsvreddit/eslint-config": "github:fsvreddit/eslint-config",
+    "@fsvreddit/eslint-config": "^0.1.2",
     "@types/json2md": "^1.5.4",
-    "@types/luxon": "^3.6.2",
+    "@types/node": "^26.2.0",
+    "devvit": "0.15.2",
     "eslint": "^10.0.0",
     "typescript": "5.8.3",
-    "vitest": "^3.0.5"
+    "vite": "^8.0.0",
+    "vitest": "^5.0.4"
   }
 }

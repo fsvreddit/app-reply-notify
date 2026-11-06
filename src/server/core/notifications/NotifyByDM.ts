@@ -1,4 +1,4 @@
-import { Comment, SettingsFormField } from "@devvit/public-api";
+import { Comment, reddit } from "@devvit/web/server";
 import { NotifyBase } from "./NotifyBase.js";
 
 export class NotifyByDM extends NotifyBase {
@@ -8,19 +8,9 @@ export class NotifyByDM extends NotifyBase {
 
     private messageSubjectSetting = "directMessageSubject";
     private messageTemplateSetting = "directMessageTemplate";
-    override actionSettings: SettingsFormField[] = [
-        {
-            type: "string",
-            name: this.messageSubjectSetting,
-            label: "Subject for the direct message sent to the user",
-            defaultValue: "Comment reply notification",
-        },
-        {
-            type: "paragraph",
-            name: this.messageTemplateSetting,
-            label: "Template for the direct message sent to the user",
-            helpText: "You can use the following placeholders: {{authorname}}, {{permalink}}, {{parentusername}}.",
-        },
+    override actionSettingsNames: string[] = [
+        this.messageSubjectSetting,
+        this.messageTemplateSetting,
     ];
 
     public override async execute (comment: Comment, parentUsername: string): Promise<void> {
@@ -39,7 +29,7 @@ export class NotifyByDM extends NotifyBase {
         message = message.replaceAll("{{permalink}}", comment.permalink);
         message = message.replaceAll("{{parentusername}}", parentUsername);
 
-        await this.context.reddit.sendPrivateMessage({
+        await reddit.sendPrivateMessage({
             to: comment.authorName,
             subject: messageSubject,
             text: message,

@@ -1,4 +1,4 @@
-import { Comment, SettingsFormField } from "@devvit/public-api";
+import { Comment } from "@devvit/web/server";
 import { NotifyBase } from "./NotifyBase.js";
 
 export class NotifyByDiscord extends NotifyBase {
@@ -7,23 +7,8 @@ export class NotifyByDiscord extends NotifyBase {
     override helpText = "Sends a Discord notification when a comment is made in response to a monitored user.";
 
     private webhookSetting = "discordWebhookUrl";
-    override actionSettings: SettingsFormField[] = [
-        {
-            type: "string",
-            name: this.webhookSetting,
-            label: "Discord Webhook URL",
-            onValidate: ({ value }) => {
-                if (!value) {
-                    return;
-                }
-
-                const webhookRegex = /^https:\/\/discord(?:app)?\.com\/api\/webhooks\/\d+\/[a-zA-Z0-9_-]+$/;
-
-                if (!webhookRegex.test(value)) {
-                    return "Please enter a valid Discord webhook URL, or leave blank to not send Discord notifications.";
-                }
-            },
-        },
+    override actionSettingsNames: string[] = [
+        this.webhookSetting,
     ];
 
     override async execute (comment: Comment, parentUsername: string): Promise<void> {

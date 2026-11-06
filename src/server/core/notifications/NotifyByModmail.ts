@@ -1,4 +1,4 @@
-import { Comment } from "@devvit/public-api";
+import { Comment, context, reddit } from "@devvit/web/server";
 import { NotifyBase } from "./NotifyBase.js";
 import json2md from "json2md";
 
@@ -7,7 +7,7 @@ export class NotifyByModmail extends NotifyBase {
     override enabledByDefault = false;
     override helpText = "Sends a modmail message to the subreddit moderators when a comment is made in response to a monitored user.";
 
-    public actionSettings = [];
+    override actionSettingsNames = [];
 
     public override async execute (comment: Comment, parentUsername: string): Promise<void> {
         const output: json2md.DataObject[] = [
@@ -17,8 +17,8 @@ export class NotifyByModmail extends NotifyBase {
             { p: "*I am a bot, and this action was triggered automatically.*" },
         ];
 
-        await this.context.reddit.modMail.createModInboxConversation({
-            subredditId: this.context.subredditId,
+        await reddit.modMail.createModInboxConversation({
+            subredditId: context.subredditId,
             subject: "Comment reply notification",
             bodyMarkdown: json2md(output),
         });

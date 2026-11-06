@@ -38,6 +38,11 @@ This could be useful if you just want to notify the user that their message won'
 
 ## Change Log
 
+### v1.2.0
+
+* Added option (on by default) to notify on replies to Automod Neo
+* Update Dev Platform version and rewrite for Devvit Web framework
+
 ### v1.1.2
 
 * Fix issue which might stop app handling app-created comments that get filtered to the queue

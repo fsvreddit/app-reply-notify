@@ -1,0 +1,119 @@
+{
+    "$schema": "https://developers.reddit.com/schema/config-file.v1.json",
+    "name": "app-reply-notify",
+    "permissions": {
+        "http": {
+            "domains": [
+                "api.sightengine.com"
+            ]
+        },
+        "reddit": true
+    },
+    "scripts": {
+        "build": "vite build",
+        "dev": "vite build --watch"
+    },
+    "server": {
+        "dir": "dist/server",
+        "entry": "index.cjs"
+    },
+    "settings": {
+        "subreddit": {
+            "group_GeneralSettings": {
+                "type": "group",
+                "label": "General Settings",
+                "fields": {
+                    "notifyForModTeamAccount": {
+                        "type": "boolean",
+                        "label": "Notify for replies to subreddit -ModTeam Account",
+                        "defaultValue": true
+                    },
+                    "notifyForAutomod": {
+                        "type": "boolean",
+                        "label": "Notify for AutoModerator",
+                        "defaultValue": true
+                    },
+                    "notifyForAutomodNeo": {
+                        "type": "boolean",
+                        "label": "Notify for AutoMod Neo",
+                        "defaultValue": true
+                    },
+                    "`notifyForSpecifiedUsers`": {
+                        "type": "string",
+                        "label": "Notify for these specified Users (comma-separated, not case-sensitive)",
+                        "helpText": "Omit the leading /u/ when specifying usernames. For example, to notify for replies to /u/trending-tattler and /u/vip-bot, enter 'trending-tattler, vip-bot'."
+                    },
+                    "ignoreCommentsFromModerators": {
+                        "type": "boolean",
+                        "label": "Ignore comments from moderators",
+                        "helpText": "If enabled, comments from moderators in reply to the above accounts will not trigger notifications.",
+                        "defaultValue": true
+                    }
+                }
+            },
+            "group_Report": {
+                "type": "group",
+                "label": "Report Settings",
+                "fields": {
+                    "enableReportNotifications": {
+                        "type": "boolean",
+                        "label": "Enable Report notifications",
+                        "defaultValue": true
+                    }
+                }
+            },
+            "group_Modmail": {
+                "type": "group",
+                "label": "Modmail Settings",
+                "fields": {
+                    "enableModmailNotifications": {
+                        "type": "boolean",
+                        "label": "Enable Modmail notifications",
+                        "defaultValue": false
+                    }
+                }
+            },
+            "group_Discord": {
+                "type": "group",
+                "label": "Discord Settings",
+                "fields": {
+                    "enableDiscordNotifications": {
+                        "type": "boolean",
+                        "label": "Enable Discord notifications",
+                        "defaultValue": false
+                    },
+                    "discordWebhookUrl": {
+                        "type": "string",
+                        "label": "Discord Webhook URL",
+                        "helpText": "Enter the Discord webhook URL to send notifications to.",
+                        "validationEndpoint": "/internal/validators/discord-webhook"
+                    }
+                }
+            },
+            "group_DirectMessage": {
+                "type": "group",
+                "label": "Direct Message Settings",
+                "fields": {
+                    "enableDirectMessageNotifications": {
+                        "type": "boolean",
+                        "label": "Enable Direct Message notifications",
+                        "defaultValue": false
+                    },
+                    "directMessageSubject": {
+                        "type": "string",
+                        "label": "Subject for the direct message sent to the user",
+                        "defaultValue": "Comment reply notification"
+                    },
+                    "directMessageTemplate": {
+                        "type": "paragraph",
+                        "label": "Template for the direct message sent to the user",
+                        "helpText": "You can use the following placeholders: {{authorname}}, {{permalink}}, {{parentusername}}."
+                    }
+                }
+            }
+        }
+    },
+    "triggers": {
+        "onCommentCreate": "/internal/triggers/comment-create"
+    }
+}
