@@ -38,7 +38,7 @@ This could be useful if you just want to notify the user that their message won'
 
 ## Change Log
 
-### v1.2.0
+### v1.2.1
 
 * Added option (on by default) to notify on replies to Automod Neo
 * Update Dev Platform version and rewrite for Devvit Web framework

@@ -4,7 +4,8 @@
     "permissions": {
         "http": {
             "domains": [
-                "api.sightengine.com"
+                "discord.com",
+                "discordapp.com"
             ]
         },
         "reddit": true
